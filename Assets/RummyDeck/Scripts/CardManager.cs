@@ -18,7 +18,9 @@ public class CardManager : MonoBehaviour
     public CardView SelectedCard { get => selectedCard; }
     public GameObject ParentHolder { get => parentHolder; }
     public static int count = 0;
-   
+    //public List<Text> cardnames;
+    public Text ScoreText;
+    public  int score = 0;
     private void Awake()
     {
         if (instance == null)
@@ -29,6 +31,7 @@ public class CardManager : MonoBehaviour
 
     private void Start()
     {
+        ScoreText.text = "Score :" + score.ToString();
         cardbool = false;
         for (int i = 0; i < Length; i++)
         {
@@ -36,7 +39,10 @@ public class CardManager : MonoBehaviour
             k = i;
             SpawnCard();
         }
+        Invoke("CardComparison", 1);
+      //  Invoke("CardSequenceComparison", 1);
         
+        //CardComparison();
     }
    
 
@@ -47,12 +53,13 @@ public class CardManager : MonoBehaviour
     public void SelectCard(CardView card)
     {
         //save the selected card SiblingIndex [Child Index for its parent]
-        int selectedIndex = card.transform.GetSiblingIndex();
+         int selectedIndex = card.transform.GetSiblingIndex();
+      
         selectedCard = card;                        //set selectedCard to card
         selectedCard.ChildIndex = selectedIndex;    //set the selectedCard ChildIndex
-        GetDummyCard().SetActive(true);             //activate dummy card
-        GetDummyCard().transform.SetSiblingIndex(selectedIndex);    //set dummy card index
-                                                    //change the parent of selectedCard
+       GetDummyCard().SetActive(true);             //activate dummy card
+      GetDummyCard().transform.SetSiblingIndex(selectedIndex);    //set dummy card index
+                                               //change the parent of selectedCard
         selectedCard.transform.SetParent(CardManager.instance.ParentHolder.transform);
 
         childCount = cardHolder.transform.childCount;
@@ -108,7 +115,7 @@ public class CardManager : MonoBehaviour
                         cardbool = false;
                     selectedCard.transform.SetParent(cardHolder.transform);
                     GetDummyCard().transform.SetParent(CardManager.instance.ParentHolder.transform);
-                     selectedCard.transform.SetSiblingIndex(selectedCard.ChildIndex);
+                   selectedCard.transform.SetSiblingIndex(selectedCard.ChildIndex);
                     GetDummyCard().transform.SetParent(CardManager.instance.ParentHolder.transform);
                      }
                 }
@@ -120,7 +127,7 @@ public class CardManager : MonoBehaviour
                 {
                     selectedCard.tag = "playingCard";
                     selectedCard.transform.SetParent(cardHolder.transform);
-                selectedCard.transform.SetSiblingIndex(GetDummyCard().transform.GetSiblingIndex());
+              selectedCard.transform.SetSiblingIndex(GetDummyCard().transform.GetSiblingIndex());
                 GetDummyCard().transform.SetParent(CardManager.instance.ParentHolder.transform);
                 }
             }
@@ -134,6 +141,7 @@ public class CardManager : MonoBehaviour
         //  Debug.Log(cardHolder.transform.childCount);
         if (selectedCard.tag == "catchcard" && cardHolder.transform.childCount > 10)
         {
+            GetDummyCard().SetActive(false);
             selectedCard.transform.position = carddroppoint.transform.position;
         }
     }
@@ -200,7 +208,108 @@ public class CardManager : MonoBehaviour
             }
         }
     }
-    public void CardButton()
+
+    bool once = false;
+    bool once2 = false;
+    public void CardComparison()
+    {
+        //score = 0;
+        once2 = false;
+        once = false;
+        for (int i = 0; i <= cardHolder.transform.childCount; i++)
+        {
+            if (!once) { score = 0; once = true; }
+            //Debug.Log(cardHolder.transform.GetChild(i).GetComponent<CardView>().CardNum);
+            if (cardHolder.transform.GetChild(i).GetComponent<CardView>().CardNum == cardHolder.transform.GetChild(i + 1).GetComponent<CardView>().CardNum && cardHolder.transform.GetChild(i + 1).GetComponent<CardView>().CardNum == cardHolder.transform.GetChild(i + 2).GetComponent<CardView>().CardNum)
+            {
+               
+              score += 10;
+                ScoreText.text = "Score :" + score.ToString();
+                Debug.Log("Match found");
+                Debug.Log(cardHolder.transform.GetChild(i));
+                if (cardHolder.transform.GetChild(i + 2).GetComponent<CardView>().CardNum == cardHolder.transform.GetChild(i + 3).GetComponent<CardView>().CardNum)
+                {
+                   
+                    ScoreText.text = "Score :" + score.ToString();
+                    Debug.Log("Match found");
+                    Debug.Log(cardHolder.transform.GetChild(i));
+                }
+                else
+                {
+                  
+                   // score -= 10;
+                    ScoreText.text = "Score :" + score.ToString();
+                }
+
+            }
+            else
+            {
+               
+              //  score -= 10;
+                ScoreText.text = "Score :" + score.ToString();
+            }
+            if (!once2) { score = 0; once2 = true; }
+            if (cardHolder.transform.GetChild(i).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 1).GetComponent<CardView>().Carddec && cardHolder.transform.GetChild(i + 1).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 2).GetComponent<CardView>().Carddec)
+            { 
+                 if (cardHolder.transform.GetChild(i).GetComponent<CardView>().CardNum == cardHolder.transform.GetChild(i + 1).GetComponent<CardView>().CardNum - 1 && cardHolder.transform.GetChild(i +1).GetComponent<CardView>().CardNum - 1 == cardHolder.transform.GetChild(i + 2).GetComponent<CardView>().CardNum - 2)
+                 {
+                    
+                    // score = 0;
+                    score += 10;
+                    ScoreText.text = "Score :" + score.ToString();
+                    Debug.Log("card sequence found");
+                    if (cardHolder.transform.GetChild(i + 2).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 3).GetComponent<CardView>().Carddec ||
+                           ( cardHolder.transform.GetChild(i + 3).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 4).GetComponent<CardView>().Carddec) ||
+                           cardHolder.transform.GetChild(i + 4).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 5).GetComponent<CardView>().Carddec ||
+                           cardHolder.transform.GetChild(i + 5).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 6).GetComponent<CardView>().Carddec ||
+                           cardHolder.transform.GetChild(i + 6).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 7).GetComponent<CardView>().Carddec ||
+                           cardHolder.transform.GetChild(i + 7).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 8).GetComponent<CardView>().Carddec ||
+                           cardHolder.transform.GetChild(i + 8).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 9).GetComponent<CardView>().Carddec)
+                    {
+                        if(cardHolder.transform.GetChild(i + 2).GetComponent<CardView>().CardNum - 2 == cardHolder.transform.GetChild(i + 3).GetComponent<CardView>().CardNum - 3 ||
+                            cardHolder.transform.GetChild(i + 3).GetComponent<CardView>().CardNum - 3 == cardHolder.transform.GetChild(i + 4).GetComponent<CardView>().CardNum - 4 ||
+                            cardHolder.transform.GetChild(i + 4).GetComponent<CardView>().CardNum - 4 == cardHolder.transform.GetChild(i + 5).GetComponent<CardView>().CardNum - 5 ||
+                            cardHolder.transform.GetChild(i + 5).GetComponent<CardView>().CardNum - 5 == cardHolder.transform.GetChild(i + 6).GetComponent<CardView>().CardNum - 6 ||
+                            cardHolder.transform.GetChild(i + 6).GetComponent<CardView>().CardNum - 6 == cardHolder.transform.GetChild(i + 7).GetComponent<CardView>().CardNum - 7 ||
+                            cardHolder.transform.GetChild(i + 7).GetComponent<CardView>().CardNum - 7 == cardHolder.transform.GetChild(i + 8).GetComponent<CardView>().CardNum - 8 ||
+                            cardHolder.transform.GetChild(i + 8).GetComponent<CardView>().CardNum - 8 == cardHolder.transform.GetChild(i + 9).GetComponent<CardView>().CardNum - 9)
+                        {
+                          
+                            ScoreText.text = "Score :" + score.ToString();
+                            Debug.Log(" full card sequence found");
+                        }
+
+                    }
+                    else
+                    {
+                       
+                     //  score -= 10;
+                        ScoreText.text = "Score :" + score.ToString();
+                    }
+                    
+                 }
+            }
+            else
+            {
+                
+                //score -= 10;
+                ScoreText.text = "Score :" + score.ToString();
+            }
+
+        }
+       
+    }
+  /*public void CardSequenceComparison()
+    {
+        for (int i = 0; i <= cardHolder.transform.childCount; i++)
+        {
+            if (cardHolder.transform.GetChild(i).GetComponent<CardView>().CardName == cardHolder.transform.GetChild(i + 1).GetComponent<CardView>().CardName && cardHolder.transform.GetChild(i + 1).GetComponent<CardView>().CardName == cardHolder.transform.GetChild(i + 2).GetComponent<CardView>().CardName)
+            {
+                Debug.Log("same card found");
+            }
+        }
+    }*/
+            public void CardButton()
     {
         // if (count == 9)
         
@@ -222,8 +331,8 @@ public class CardManager : MonoBehaviour
         card.tag = "playingCard";
         card.transform.SetParent(cardHolder.transform);
         card.GetComponent<CardView>().SetCardImg(cardImages[i]);
-        
-       Debug.Log(cardImages[i]);
+       // cardnames[i].text = cardImages[i].name;
+      // Debug.Log(cardnames[i]);
 
     }
 

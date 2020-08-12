@@ -28,7 +28,7 @@ public class InputManager : MonoBehaviour, IPointerDownHandler,
         {
             //Debug.Log("OnPointerDown " + eventData.pointerCurrentRaycast.gameObject.name);
             if (eventData.pointerCurrentRaycast.gameObject.GetComponent<CardView>() != null)
-            {
+            { 
                 CardManager.instance.SelectCard(eventData.pointerCurrentRaycast.gameObject.GetComponent<CardView>());
             }
         }
@@ -42,5 +42,7 @@ public class InputManager : MonoBehaviour, IPointerDownHandler,
         }
 
         CardManager.instance.OnCardRelease();
+        CardManager.instance.CardComparison();
+       // CardManager.instance.CardSequenceComparison();
     }
 }
