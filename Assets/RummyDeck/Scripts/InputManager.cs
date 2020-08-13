@@ -43,6 +43,6 @@ public class InputManager : MonoBehaviour, IPointerDownHandler,
 
         CardManager.instance.OnCardRelease();
         CardManager.instance.CardComparison();
-       // CardManager.instance.CardSequenceComparison();
+       //  CardManager.instance.CardSequenceComparison();
     }
 }

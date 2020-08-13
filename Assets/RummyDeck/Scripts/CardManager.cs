@@ -40,7 +40,7 @@ public class CardManager : MonoBehaviour
             SpawnCard();
         }
         Invoke("CardComparison", 1);
-      //  Invoke("CardSequenceComparison", 1);
+       // Invoke("CardSequenceComparison", 1);
         
         //CardComparison();
     }
@@ -53,7 +53,7 @@ public class CardManager : MonoBehaviour
     public void SelectCard(CardView card)
     {
         //save the selected card SiblingIndex [Child Index for its parent]
-         int selectedIndex = card.transform.GetSiblingIndex();
+         int selectedIndex = card.transform.GetSiblingIndex() - 1;
       
         selectedCard = card;                        //set selectedCard to card
         selectedCard.ChildIndex = selectedIndex;    //set the selectedCard ChildIndex
@@ -214,42 +214,39 @@ public class CardManager : MonoBehaviour
     public void CardComparison()
     {
         //score = 0;
-        once2 = false;
+         once2 = false;
         once = false;
         for (int i = 0; i <= cardHolder.transform.childCount; i++)
         {
+           
             if (!once) { score = 0; once = true; }
+            if (!once2) { score = 0; once2 = true; }
             //Debug.Log(cardHolder.transform.GetChild(i).GetComponent<CardView>().CardNum);
             if (cardHolder.transform.GetChild(i).GetComponent<CardView>().CardNum == cardHolder.transform.GetChild(i + 1).GetComponent<CardView>().CardNum && cardHolder.transform.GetChild(i + 1).GetComponent<CardView>().CardNum == cardHolder.transform.GetChild(i + 2).GetComponent<CardView>().CardNum)
             {
-               
-              score += 10;
+
+                score += 10;
                 ScoreText.text = "Score :" + score.ToString();
                 Debug.Log("Match found");
                 Debug.Log(cardHolder.transform.GetChild(i));
                 if (cardHolder.transform.GetChild(i + 2).GetComponent<CardView>().CardNum == cardHolder.transform.GetChild(i + 3).GetComponent<CardView>().CardNum)
                 {
-                   
+                    score -= 10;
                     ScoreText.text = "Score :" + score.ToString();
                     Debug.Log("Match found");
                     Debug.Log(cardHolder.transform.GetChild(i));
                 }
                 else
                 {
-                  
-                   // score -= 10;
+
+                    // score -= 10;
                     ScoreText.text = "Score :" + score.ToString();
                 }
 
             }
-            else
-            {
-               
-              //  score -= 10;
-                ScoreText.text = "Score :" + score.ToString();
-            }
-            if (!once2) { score = 0; once2 = true; }
-            if (cardHolder.transform.GetChild(i).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 1).GetComponent<CardView>().Carddec && cardHolder.transform.GetChild(i + 1).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 2).GetComponent<CardView>().Carddec)
+      
+            
+          else  if (cardHolder.transform.GetChild(i).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 1).GetComponent<CardView>().Carddec && cardHolder.transform.GetChild(i + 1).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 2).GetComponent<CardView>().Carddec)
             { 
                  if (cardHolder.transform.GetChild(i).GetComponent<CardView>().CardNum == cardHolder.transform.GetChild(i + 1).GetComponent<CardView>().CardNum - 1 && cardHolder.transform.GetChild(i +1).GetComponent<CardView>().CardNum - 1 == cardHolder.transform.GetChild(i + 2).GetComponent<CardView>().CardNum - 2)
                  {
@@ -258,23 +255,23 @@ public class CardManager : MonoBehaviour
                     score += 10;
                     ScoreText.text = "Score :" + score.ToString();
                     Debug.Log("card sequence found");
-                    if (cardHolder.transform.GetChild(i + 2).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 3).GetComponent<CardView>().Carddec ||
-                           ( cardHolder.transform.GetChild(i + 3).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 4).GetComponent<CardView>().Carddec) ||
-                           cardHolder.transform.GetChild(i + 4).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 5).GetComponent<CardView>().Carddec ||
-                           cardHolder.transform.GetChild(i + 5).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 6).GetComponent<CardView>().Carddec ||
-                           cardHolder.transform.GetChild(i + 6).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 7).GetComponent<CardView>().Carddec ||
-                           cardHolder.transform.GetChild(i + 7).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 8).GetComponent<CardView>().Carddec ||
+                    if (cardHolder.transform.GetChild(i + 2).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 3).GetComponent<CardView>().Carddec &&
+                           ( cardHolder.transform.GetChild(i + 3).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 4).GetComponent<CardView>().Carddec) &&
+                           cardHolder.transform.GetChild(i + 4).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 5).GetComponent<CardView>().Carddec &&
+                           cardHolder.transform.GetChild(i + 5).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 6).GetComponent<CardView>().Carddec &&
+                           cardHolder.transform.GetChild(i + 6).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 7).GetComponent<CardView>().Carddec &&
+                           cardHolder.transform.GetChild(i + 7).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 8).GetComponent<CardView>().Carddec &&
                            cardHolder.transform.GetChild(i + 8).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 9).GetComponent<CardView>().Carddec)
                     {
-                        if(cardHolder.transform.GetChild(i + 2).GetComponent<CardView>().CardNum - 2 == cardHolder.transform.GetChild(i + 3).GetComponent<CardView>().CardNum - 3 ||
-                            cardHolder.transform.GetChild(i + 3).GetComponent<CardView>().CardNum - 3 == cardHolder.transform.GetChild(i + 4).GetComponent<CardView>().CardNum - 4 ||
-                            cardHolder.transform.GetChild(i + 4).GetComponent<CardView>().CardNum - 4 == cardHolder.transform.GetChild(i + 5).GetComponent<CardView>().CardNum - 5 ||
-                            cardHolder.transform.GetChild(i + 5).GetComponent<CardView>().CardNum - 5 == cardHolder.transform.GetChild(i + 6).GetComponent<CardView>().CardNum - 6 ||
-                            cardHolder.transform.GetChild(i + 6).GetComponent<CardView>().CardNum - 6 == cardHolder.transform.GetChild(i + 7).GetComponent<CardView>().CardNum - 7 ||
-                            cardHolder.transform.GetChild(i + 7).GetComponent<CardView>().CardNum - 7 == cardHolder.transform.GetChild(i + 8).GetComponent<CardView>().CardNum - 8 ||
+                        if(cardHolder.transform.GetChild(i + 2).GetComponent<CardView>().CardNum - 2 == cardHolder.transform.GetChild(i + 3).GetComponent<CardView>().CardNum - 3 &&
+                            cardHolder.transform.GetChild(i + 3).GetComponent<CardView>().CardNum - 3 == cardHolder.transform.GetChild(i + 4).GetComponent<CardView>().CardNum - 4 &&
+                            cardHolder.transform.GetChild(i + 4).GetComponent<CardView>().CardNum - 4 == cardHolder.transform.GetChild(i + 5).GetComponent<CardView>().CardNum - 5 &&
+                            cardHolder.transform.GetChild(i + 5).GetComponent<CardView>().CardNum - 5 == cardHolder.transform.GetChild(i + 6).GetComponent<CardView>().CardNum - 6 &&
+                            cardHolder.transform.GetChild(i + 6).GetComponent<CardView>().CardNum - 6 == cardHolder.transform.GetChild(i + 7).GetComponent<CardView>().CardNum - 7 &&
+                            cardHolder.transform.GetChild(i + 7).GetComponent<CardView>().CardNum - 7 == cardHolder.transform.GetChild(i + 8).GetComponent<CardView>().CardNum - 8 &&
                             cardHolder.transform.GetChild(i + 8).GetComponent<CardView>().CardNum - 8 == cardHolder.transform.GetChild(i + 9).GetComponent<CardView>().CardNum - 9)
                         {
-                          
+                            score -= 10;
                             ScoreText.text = "Score :" + score.ToString();
                             Debug.Log(" full card sequence found");
                         }
@@ -299,17 +296,61 @@ public class CardManager : MonoBehaviour
         }
        
     }
-  /*public void CardSequenceComparison()
+ /* public void CardSequenceComparison()
     {
+        once2 = false;
         for (int i = 0; i <= cardHolder.transform.childCount; i++)
         {
-            if (cardHolder.transform.GetChild(i).GetComponent<CardView>().CardName == cardHolder.transform.GetChild(i + 1).GetComponent<CardView>().CardName && cardHolder.transform.GetChild(i + 1).GetComponent<CardView>().CardName == cardHolder.transform.GetChild(i + 2).GetComponent<CardView>().CardName)
+            if (!once2) { score = 0; once2 = true; }
+            if (cardHolder.transform.GetChild(i).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 1).GetComponent<CardView>().Carddec && cardHolder.transform.GetChild(i + 1).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 2).GetComponent<CardView>().Carddec)
             {
-                Debug.Log("same card found");
+                if (cardHolder.transform.GetChild(i).GetComponent<CardView>().CardNum == cardHolder.transform.GetChild(i + 1).GetComponent<CardView>().CardNum - 1 && cardHolder.transform.GetChild(i + 1).GetComponent<CardView>().CardNum - 1 == cardHolder.transform.GetChild(i + 2).GetComponent<CardView>().CardNum - 2)
+                {
+
+                    // score = 0;
+                    score += 10;
+                    ScoreText.text = "Score :" + score.ToString();
+                    Debug.Log("card sequence found");
+                    if (cardHolder.transform.GetChild(i + 2).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 3).GetComponent<CardView>().Carddec ||
+                           (cardHolder.transform.GetChild(i + 3).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 4).GetComponent<CardView>().Carddec) ||
+                           cardHolder.transform.GetChild(i + 4).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 5).GetComponent<CardView>().Carddec ||
+                           cardHolder.transform.GetChild(i + 5).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 6).GetComponent<CardView>().Carddec ||
+                           cardHolder.transform.GetChild(i + 6).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 7).GetComponent<CardView>().Carddec ||
+                           cardHolder.transform.GetChild(i + 7).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 8).GetComponent<CardView>().Carddec ||
+                           cardHolder.transform.GetChild(i + 8).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 9).GetComponent<CardView>().Carddec)
+                    {
+                        if (cardHolder.transform.GetChild(i + 2).GetComponent<CardView>().CardNum - 2 == cardHolder.transform.GetChild(i + 3).GetComponent<CardView>().CardNum - 3 ||
+                            cardHolder.transform.GetChild(i + 3).GetComponent<CardView>().CardNum - 3 == cardHolder.transform.GetChild(i + 4).GetComponent<CardView>().CardNum - 4 ||
+                            cardHolder.transform.GetChild(i + 4).GetComponent<CardView>().CardNum - 4 == cardHolder.transform.GetChild(i + 5).GetComponent<CardView>().CardNum - 5 ||
+                            cardHolder.transform.GetChild(i + 5).GetComponent<CardView>().CardNum - 5 == cardHolder.transform.GetChild(i + 6).GetComponent<CardView>().CardNum - 6 ||
+                            cardHolder.transform.GetChild(i + 6).GetComponent<CardView>().CardNum - 6 == cardHolder.transform.GetChild(i + 7).GetComponent<CardView>().CardNum - 7 ||
+                            cardHolder.transform.GetChild(i + 7).GetComponent<CardView>().CardNum - 7 == cardHolder.transform.GetChild(i + 8).GetComponent<CardView>().CardNum - 8 ||
+                            cardHolder.transform.GetChild(i + 8).GetComponent<CardView>().CardNum - 8 == cardHolder.transform.GetChild(i + 9).GetComponent<CardView>().CardNum - 9)
+                        {
+                            score -= 10;
+                            ScoreText.text = "Score :" + score.ToString();
+                            Debug.Log(" full card sequence found");
+                        }
+
+                    }
+                    else
+                    {
+
+                        //  score -= 10;
+                        ScoreText.text = "Score :" + score.ToString();
+                    }
+
+                }
+            }
+            else
+            {
+
+                //score -= 10;
+                ScoreText.text = "Score :" + score.ToString();
             }
         }
     }*/
-            public void CardButton()
+    public void CardButton()
     {
         // if (count == 9)
         
