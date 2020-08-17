@@ -25,7 +25,7 @@ public class CardView : MonoBehaviour
         Carddec = Splitarray[0];
         CardNum = int.Parse( Splitarray[1]);
         Debug.Log(Carddec);
-        Debug.Log(CardNum);
+       Debug.Log(CardNum);
     }
     public void SetCardImg(Sprite sprite)
     {

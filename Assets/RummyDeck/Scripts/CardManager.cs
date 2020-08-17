@@ -20,7 +20,11 @@ public class CardManager : MonoBehaviour
     public static int count = 0;
     //public List<Text> cardnames;
     public Text ScoreText;
-    public  int score = 0;
+    public   int score ;
+    public int instCardNumber= 0;
+    public GameObject cardObj;
+    public  int scorecount = 0;
+    
     private void Awake()
     {
         if (instance == null)
@@ -51,9 +55,8 @@ public class CardManager : MonoBehaviour
     /// </summary>
     /// <param name="card">Reference of tapped card</param>
     public void SelectCard(CardView card)
-    {
-        //save the selected card SiblingIndex [Child Index for its parent]
-         int selectedIndex = card.transform.GetSiblingIndex() - 1;
+    {//save the selected card SiblingIndex [Child Index for its parent]
+        int selectedIndex = card.transform.GetSiblingIndex() - 1;
       
         selectedCard = card;                        //set selectedCard to card
         selectedCard.ChildIndex = selectedIndex;    //set the selectedCard ChildIndex
@@ -144,6 +147,7 @@ public class CardManager : MonoBehaviour
             GetDummyCard().SetActive(false);
             selectedCard.transform.position = carddroppoint.transform.position;
         }
+        
     }
     /// <summary>
     /// Method called on drag of card
@@ -208,27 +212,52 @@ public class CardManager : MonoBehaviour
             }
         }
     }
-
+   
     bool once = false;
     bool once2 = false;
+    bool once3 = false;
+    bool once4 = false;
+
     public void CardComparison()
     {
         //score = 0;
-         once2 = false;
+        once4 = false;
+        once3 = false;
+        once2 = false;
         once = false;
         for (int i = 0; i <= cardHolder.transform.childCount; i++)
         {
-           
-            if (!once) { score = 0; once = true; }
-            if (!once2) { score = 0; once2 = true; }
+           if (!once2) {
+                score = 0;
+               
+                once2 = true;
+            }
+            
+            if (!once)
+            {
+                score = 0;
+
+                once = true;
+            }
+            if (!once4)
+            {
+                //scorecount -= 10;
+                score = scorecount;
+
+                once4 = true;
+            }
+
             //Debug.Log(cardHolder.transform.GetChild(i).GetComponent<CardView>().CardNum);
             if (cardHolder.transform.GetChild(i).GetComponent<CardView>().CardNum == cardHolder.transform.GetChild(i + 1).GetComponent<CardView>().CardNum && cardHolder.transform.GetChild(i + 1).GetComponent<CardView>().CardNum == cardHolder.transform.GetChild(i + 2).GetComponent<CardView>().CardNum)
             {
-
+                //scorecount -= 10;
                 score += 10;
+               /// score = scorecount;
+               
+               //score += scorecount;
+
                 ScoreText.text = "Score :" + score.ToString();
-                Debug.Log("Match found");
-                Debug.Log(cardHolder.transform.GetChild(i));
+               
                 if (cardHolder.transform.GetChild(i + 2).GetComponent<CardView>().CardNum == cardHolder.transform.GetChild(i + 3).GetComponent<CardView>().CardNum)
                 {
                     score -= 10;
@@ -244,15 +273,13 @@ public class CardManager : MonoBehaviour
                 }
 
             }
-      
-            
-          else  if (cardHolder.transform.GetChild(i).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 1).GetComponent<CardView>().Carddec && cardHolder.transform.GetChild(i + 1).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 2).GetComponent<CardView>().Carddec)
+            else  if (cardHolder.transform.GetChild(i).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 1).GetComponent<CardView>().Carddec && cardHolder.transform.GetChild(i + 1).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 2).GetComponent<CardView>().Carddec)
             { 
                  if (cardHolder.transform.GetChild(i).GetComponent<CardView>().CardNum == cardHolder.transform.GetChild(i + 1).GetComponent<CardView>().CardNum - 1 && cardHolder.transform.GetChild(i +1).GetComponent<CardView>().CardNum - 1 == cardHolder.transform.GetChild(i + 2).GetComponent<CardView>().CardNum - 2)
                  {
-                    
-                    // score = 0;
                     score += 10;
+                   // score = scorecount;
+                   
                     ScoreText.text = "Score :" + score.ToString();
                     Debug.Log("card sequence found");
                     if (cardHolder.transform.GetChild(i + 2).GetComponent<CardView>().Carddec == cardHolder.transform.GetChild(i + 3).GetComponent<CardView>().Carddec &&
@@ -280,7 +307,7 @@ public class CardManager : MonoBehaviour
                     else
                     {
                        
-                     //  score -= 10;
+                        //  score -= 10;
                         ScoreText.text = "Score :" + score.ToString();
                     }
                     
@@ -289,12 +316,12 @@ public class CardManager : MonoBehaviour
             else
             {
                 
-                //score -= 10;
+
                 ScoreText.text = "Score :" + score.ToString();
             }
-
+            
         }
-       
+      
     }
  /* public void CardSequenceComparison()
     {
@@ -353,30 +380,42 @@ public class CardManager : MonoBehaviour
     public void CardButton()
     {
         // if (count == 9)
-        
+         
             if (cardHolder.transform.childCount == 9)
            {
               SpawnCard();
-           // k++;
+            Invoke("GettingInstCardNum", 0.2f);
+            
+            // k++;
             count++;
              
              }
      }
+    public void GettingInstCardNum()
+    {
+        instCardNumber = cardObj.GetComponent<CardView>().CardNum;
+        score = score - instCardNumber;
+        scorecount = score;
+        Debug.Log(instCardNumber);
+        ScoreText.text = "Score :" + score.ToString();
+    }
     #region Spawn Logic
     void SpawnCard()
     {
         GameObject card = Instantiate(cardPrefab);
         int i = Random.Range(0, 53);
         // card.name = "Card " + k;
+        cardObj = card;
         card.name = cardImages[i].name;
         card.tag = "playingCard";
         card.transform.SetParent(cardHolder.transform);
         card.GetComponent<CardView>().SetCardImg(cardImages[i]);
+       
        // cardnames[i].text = cardImages[i].name;
       // Debug.Log(cardnames[i]);
 
     }
-
+    
     GameObject GetDummyCard()
     {
         if (dummyCardObj == null)
