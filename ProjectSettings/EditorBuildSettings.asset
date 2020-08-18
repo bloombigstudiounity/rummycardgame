@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/RummyDeck/SampleScene.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
+    path: Assets/RummyDeck/chatroom.unity
+    guid: 1bb57d8a9c8cb1e479206977d1cfcc09
   m_configObjects: {}

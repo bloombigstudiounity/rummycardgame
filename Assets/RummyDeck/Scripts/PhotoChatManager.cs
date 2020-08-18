@@ -34,6 +34,7 @@ public class PhotoChatManager : MonoBehaviour, IChatClientListener
     // Start is called before the first frame update
     void Start()
     {
+      //  Screen.SetResolution(640, 480, true);
     }
     // Update is called once per frame
     void Update()
@@ -42,8 +43,43 @@ public class PhotoChatManager : MonoBehaviour, IChatClientListener
         {
             chatClient.Service();
         }
+        if (chatField.text != "" && Input.GetKey(KeyCode.Return))
+        {
+            SubmitPublicChatOnClick();
+            SubmitPrivateChatOnClick();
+        }
     }
     #endregion General
+    #region PublicChat
+    public void SubmitPublicChatOnClick()
+    {
+        if (privateReceiver == "")
+        {
+            chatClient.PublishMessage("RegionChannel", currentChat);
+            chatField.text = "";
+            currentChat = "";
+        }
+    }
+    public void TypeChatOnValueChange(string valueIn)
+    {
+        currentChat = valueIn;
+    }
+    #endregion PublicChat
+    #region PrivateChat
+    public void ReceiverOnValueChange(string valueIn)
+    {
+        privateReceiver = valueIn;
+    }
+    public void SubmitPrivateChatOnClick()
+    {
+        if (privateReceiver != "")
+        {
+            chatClient.SendPrivateMessage(privateReceiver, currentChat);
+            chatField.text = "";
+            currentChat = "";
+        }
+    }
+    #endregion PrivateChat
     #region Callbacks
     public void DebugReturn(DebugLevel level, string message)
     {
@@ -51,10 +87,12 @@ public class PhotoChatManager : MonoBehaviour, IChatClientListener
     }
     public void OnChatStateChange(ChatState state)
     {
-        //throw new System.NotImplementedException();
-        //Debug.Log("Connected");
-        //isConnected = true;
-        //joinChatButton.SetActive(false);
+        if (state == ChatState.Uninitialized)
+        {
+            isConnected = false;
+            joinChatButton.SetActive(true);
+            chatPanel.SetActive(false);
+        }
     }
     public void OnConnected()
     {
@@ -64,16 +102,28 @@ public class PhotoChatManager : MonoBehaviour, IChatClientListener
     }
     public void OnDisconnected()
     {
-        throw new System.NotImplementedException();
+        isConnected = false;
+        joinChatButton.SetActive(true);
+        chatPanel.SetActive(false);
     }
     public void OnGetMessages(string channelName, string[] senders, object[] messages)
     {
-        throw new System.NotImplementedException();
+        string msgs = "";
+        for (int i = 0; i < senders.Length; i++)
+        {
+           msgs = string.Format("{0}: {1}", senders[i], messages[i]);
+           
+            chatDisplay.text += "\n" + msgs;
+            Debug.Log(msgs);
+        }
     }
     public void OnPrivateMessage(string sender, object message, string channelName)
     {
-       throw new System.NotImplementedException();
-        
+        string msgs = "";
+        msgs = string.Format("(Private) {0}: {1}", sender, message);
+        chatDisplay.text += "\n " + msgs;
+        Debug.Log(msgs);
+
     }
     public void OnStatusUpdate(string user, int status, bool gotMessage, object message)
     {
